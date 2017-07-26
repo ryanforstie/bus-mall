@@ -5,7 +5,7 @@
 //CONSTUCTOR FUNCTION WITH INSTANCES DATA
 function ProductImage(number) {
   this.name = number;
-  this.source = 'img/' + this.name + '.jpg';
+  this.source = 'img/' + number + '.jpg';
   this.views = 0;
   this.votes = 0;
   ProductImage.all.push(this);
@@ -16,8 +16,9 @@ ProductImage.totalClicks = 0;
 
 //ARRAY DATA
 ProductImage.all = [];
-ProductImage.allNames = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dogduck', 'dragon', 'pen', 'petsweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'usb', 'watercan', 'wine-glass'];
+ProductImage.allNames = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dogduck', 'dragon', 'pen', 'petsweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'usb', 'watercan', 'wineglass'];
 
+var previouslyShown = [];
 for(var i = 0; i < ProductImage.allNames.length; i++) {
   new ProductImage(ProductImage.allNames[i]);
 };
@@ -33,37 +34,63 @@ function generateRandomNumber() {
 }
 //DISPLAY 3 RANDOM IMAGES THAT DO NOT DUPLICATE
 function displayProductImages() {
+  console.log(previouslyShown, 'previously shown');
   var randomNumber = [];
   randomNumber[0] = generateRandomNumber();
   randomNumber[1] = generateRandomNumber();
 
   while(randomNumber[0] === randomNumber[1]) {
-    console.log('Duplicate found');
+    console.log('Duplicate found 1');
     randomNumber[1] = generateRandomNumber();
   }
   randomNumber[2] = generateRandomNumber();
+
   while(randomNumber[2] === randomNumber[1] || randomNumber[2] === randomNumber[0]) {
-    console.log('Dupicate found');
-    randomNumber[2] === generateRandomNumber();
+    console.log('Dupicate found 2');
+    randomNumber[2] = generateRandomNumber();
   }
   ProductImage.leftImage.src = ProductImage.all[randomNumber[0]].source;
   ProductImage.centerImage.src = ProductImage.all[randomNumber[1]].source;
   ProductImage.rightImage.src = ProductImage.all[randomNumber[2]].source;
-  ProductImage.leftImage.alt = ProductImage.all[randomNumber[0]].source;
-  ProductImage.rightImage.alt = ProductImage.all[randomNumber[1]].source;
-  ProductImage.leftImage.alt = ProductImage.all[randomNumber[2]].source;
+
+  ProductImage.leftImage.alt = ProductImage.all[randomNumber[0]].name;
+  ProductImage.centerImage.alt = ProductImage.all[randomNumber[1]].name;
+  ProductImage.rightImage.alt = ProductImage.all[randomNumber[2]].name;
+
   ProductImage.all[randomNumber[0]].views += 1;
   ProductImage.all[randomNumber[1]].views += 1;
   ProductImage.all[randomNumber[2]].views += 1;
+
+  console.log('currently showing');
+  previouslyShown = randomNumber;
 };
 
+//DISPLAY LIST AFTER 25 CLICKS
+function displayList() {
+  var ulEl = document.getElementById('productList');
+
+  for(var i = 0; i < ProductImage.all.length; i++) {
+    var liEl = document.createElement('li');
+
+    liEl.textContent = ProductImage.all[i].name + ' was viewed ' + ProductImage.all[i].views + ' times and was clicked ' + ProductImage.all[i].votes + ' times';
+    ulEl.appendChild(liEl);
+  }
+}
+
 function handleClick(e) {
-  console.log(e.target);
+  ProductImage.totalClicks += 1;
+
   for(var i = 0; i < ProductImage.all.length; i++) {
     if(e.target.alt === ProductImage.all[i].name) {
       ProductImage.all[i].votes += 1;
     }
   }
+
+  if(ProductImage.totalClicks === 25) {
+    ProductImage.container.removeEventListener('click', handleClick);
+    return displayList();
+  }
+
 
   displayProductImages();
 };
