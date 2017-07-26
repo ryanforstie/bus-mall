@@ -3,9 +3,9 @@
 //DATA SECTION
 
 //CONSTUCTOR FUNCTION WITH INSTANCES DATA
-function ProductImage(number) {
-  this.name = number;
-  this.source = 'img/' + number + '.jpg';
+function ProductImage(name) {
+  this.name = name;
+  this.source = 'img/' + name + '.jpg';
   this.views = 0;
   this.votes = 0;
   ProductImage.all.push(this);
@@ -40,15 +40,16 @@ function displayProductImages() {
   randomNumber[1] = generateRandomNumber();
 
   while(randomNumber[0] === randomNumber[1]) {
-    console.log('Duplicate found 1');
+    console.log('Duplicate found');
     randomNumber[1] = generateRandomNumber();
   }
   randomNumber[2] = generateRandomNumber();
 
   while(randomNumber[2] === randomNumber[1] || randomNumber[2] === randomNumber[0]) {
-    console.log('Dupicate found 2');
+    console.log('Dupicate found');
     randomNumber[2] = generateRandomNumber();
   }
+
   ProductImage.leftImage.src = ProductImage.all[randomNumber[0]].source;
   ProductImage.centerImage.src = ProductImage.all[randomNumber[1]].source;
   ProductImage.rightImage.src = ProductImage.all[randomNumber[2]].source;
@@ -79,28 +80,205 @@ function displayList() {
 
 function handleClick(e) {
   ProductImage.totalClicks += 1;
-
+  // if (event.target.id === 'imageSection') {
+  //   return 'Click on an image!';
+  // }
   for(var i = 0; i < ProductImage.all.length; i++) {
     if(e.target.alt === ProductImage.all[i].name) {
       ProductImage.all[i].votes += 1;
     }
   }
-
   if(ProductImage.totalClicks === 25) {
     ProductImage.container.removeEventListener('click', handleClick);
+
+    updateChartArrays();
+    return drawChart();
     return displayList();
   }
-
 
   displayProductImages();
 };
 
 displayProductImages();
 
-//EVENT HANDLER THAT DISPLAYS IMAGES ON CLICK
+//EVENT HANDLER THAT DISPLAYS NEW IMAGES ON CLICK
 ProductImage.container.addEventListener('click', handleClick);
 
+// ++++++++++++++++++++++++++++++++++++++++++++
+// DATA - Variable declarations
+// ++++++++++++++++++++++++++++++++++++++++++++
 
+// var allSongs = [];
+var barChart;
+var chartDrawn = false;
+
+// ++++++++++++++++++++++++++++++++++++++++++++
+// DATA - Constructor and instances
+// ++++++++++++++++++++++++++++++++++++++++++++
+
+// function Song(title, identifier) {
+//   this.title = title;
+//   this.votes = 0;
+//   this.identifier = identifier;
+//   allSongs.push(this);
+// }
+//
+// new Song('Purple Rain', 'purplerain');
+// new Song('Let\'s Work', 'letswork');
+// new Song('DMSR', 'dmsr');
+// new Song ('Mountains', 'mountains');
+// new Song('Starfish and Coffee', 'starfish');
+
+// Arrays to hold data for the chart
+var votes = [];
+var labels = [];
+
+// ++++++++++++++++++++++++++++++++++++++++++++
+// FUNCTION DECLARATIONS
+// ++++++++++++++++++++++++++++++++++++++++++++
+
+function updateChartArrays() {
+  for (var i = 0; i < ProductImage.all.length; i++) {
+    labels[i] = ProductImage.all[i].name;
+    votes[i] = ProductImage.all[i].votes;
+  }
+}
+//
+// function showSongsAsList() {
+//   var songList = document.getElementById('funky-list');
+//   songList.innerHTML = '';
+//   songList.hidden = false;
+//   songList.textContent = 'CLICK ON THIS LIST TO HIDE IT';
+//   for (var i = 0; i < allSongs.length; i++){
+//     var liEl = document.createElement('li');
+//     liEl.textContent = allSongs[i].title + ', ' + allSongs[i].votes + ' votes';
+//     songList.appendChild(liEl);
+//   };
+// };
+//
+// function tallyVote(thisSong) {
+//   for (var i = 0; i < allSongs.length; i++) {
+//     if (thisSong === allSongs[i].identifier) {
+//       allSongs[i].votes++;
+//       updateChartArrays();
+//     }
+//   }
+// }
+
+// ++++++++++++++++++++++++++++++++++++++++++++
+// CHART STUFF
+// Charts rendered using Chart JS v.2.6.0
+// http://www.chartjs.org/
+// ++++++++++++++++++++++++++++++++++++++++++++
+
+var data = {
+  labels: labels, // titles array we declared earlier
+  datasets: [
+    {
+      data: votes, // votes array we declared earlier
+      backgroundColor: [
+        'bisque',
+        'darkgray',
+        'burlywood',
+        'lightblue',
+        'navy',
+        'bisque',
+        'darkgray',
+        'burlywood',
+        'lightblue',
+        'navy',
+        'bisque',
+        'darkgray',
+        'burlywood',
+        'lightblue',
+        'navy',
+        'bisque',
+        'darkgray',
+        'burlywood',
+        'lightblue',
+        'navy'
+      ],
+      hoverBackgroundColor: [
+        'purple',
+        'purple',
+        'purple',
+        'purple',
+        'purple',
+        'purple',
+        'purple',
+        'purple',
+        'purple',
+        'purple',
+        'purple',
+        'purple',
+        'purple',
+        'purple',
+        'purple',
+        'purple',
+        'purple',
+        'purple',
+        'purple',
+        'purple'
+      ]
+    }]
+};
+
+function drawChart() {
+  var ctx = document.getElementById('barChart').getContext('2d');
+  barChart = new Chart(ctx,{
+    type: 'horizontalBar',
+    data: data,
+    options: {
+      responsive: false,
+      animation: {
+        duration: 1000,
+        easing: 'easeOutBounce'
+      }
+    },
+    scales: {
+      yAxes: [{
+        ticks: {
+          max: 10,
+          min: 0,
+          stepSize: 1.0
+        }
+      }]
+    }
+  });
+  chartDrawn = true;
+}
+
+// function hideChart() {
+//   document.getElementById('barChart').hidden = true;
+// }
+// ++++++++++++++++++++++++++++++++++++++++++++
+// EVENT LISTENERS
+// ++++++++++++++++++++++++++++++++++++++++++++
+//
+// document.getElementById('draw-chart').addEventListener('click', function(){
+//   drawChart();
+//   // setTimeout(hideChart, 5000);
+// });
+//
+// document.getElementById('list-button').addEventListener('click', function(){
+//   showSongsAsList();
+// });
+
+// document.getElementById('list-button').addEventListener('click', showSongsAsList);
+//
+// document.getElementById('funky-list').addEventListener('click', function(){
+//   document.getElementById('funky-list').hidden = true;
+// });
+//
+// document.getElementById('voting').addEventListener('click', function(event){
+//   if (event.target.id !== 'voting') {
+//     tallyVote(event.target.id);
+//   };
+//
+//   if (chartDrawn) {
+//     songChart.update();
+//   }
+// });
 // };
 // function displayProductImages() {
 //   do {
