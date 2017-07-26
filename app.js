@@ -78,17 +78,20 @@ function displayList() {
   }
 }
 
+//FUNCTION HANDLES IF SOMEONE DOES NOT CLICK AN IMAGE, AND TRACKS CLICKS TO 25 AND DISPLAYS CHART
 function handleClick(e) {
   ProductImage.totalClicks += 1;
-  // if (event.target.id === 'imageSection') {
-  //   return 'Click on an image!';
-  // }
+
+  if (e.target.id === 'imageSection') {
+    return alert('Click on an image!');
+  }
+
   for(var i = 0; i < ProductImage.all.length; i++) {
     if(e.target.alt === ProductImage.all[i].name) {
       ProductImage.all[i].votes += 1;
     }
   }
-  if(ProductImage.totalClicks === 25) {
+  if(ProductImage.totalClicks === 5) {
     ProductImage.container.removeEventListener('click', handleClick);
 
     updateChartArrays();
@@ -229,6 +232,10 @@ function drawChart() {
     type: 'horizontalBar',
     data: data,
     options: {
+      title: {
+        display: true,
+        text: 'Your Favorite Product Chart'
+      },
       responsive: false,
       animation: {
         duration: 1000,
