@@ -19,10 +19,16 @@ ProductImage.all = [];
 ProductImage.allNames = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dogduck', 'dragon', 'pen', 'petsweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'usb', 'watercan', 'wineglass'];
 
 var previouslyShown = [];
+
+if(localStorage.length) {
+  console.log('There is local Storage');
+ProductImage.all = JSON.parse(localStorage.ProductImage)
+} else {
 for(var i = 0; i < ProductImage.allNames.length; i++) {
   new ProductImage(ProductImage.allNames[i]);
+}
+console.log('There is no local storage');
 };
-
 //DOM ELEMENTS FOR 3 IMAGES AND IMAGE SECTION
 ProductImage.leftImage = document.getElementById('left');
 ProductImage.centerImage = document.getElementById('center');
@@ -94,18 +100,46 @@ function handleClick(e) {
   if(ProductImage.totalClicks === 5) {
     ProductImage.container.removeEventListener('click', handleClick);
 
+    // localStorage.setItem('ProductImage', JSON.stringify(ProductImage));
+      // document.getElementById("click").innerHTML = "cool";
+
+
+
+  // } else {
+  //   for(var j = 0; i < ProductImage.allNames.length; j++) {
+  //     new ProductImage(ProductImage.allNames[i]);
+  //   };
+
+
+
     updateChartArrays();
     return drawChart();
-    return displayList();
+    // return displayList();
   }
+
+  localStorage.ProductImage = JSON.stringify(ProductImage.all);
 
   displayProductImages();
 };
-
 displayProductImages();
 
 //EVENT HANDLER THAT DISPLAYS NEW IMAGES ON CLICK
 ProductImage.container.addEventListener('click', handleClick);
+
+// localStorage.setItem(ProductImage, 'ProductImage');
+// localStorage.setItem('ProductImage', JSON.stringify(ProductImage));
+//
+// var retrievedObject = localStorage.getItem('ProductImage');
+// console.log('retrievedObject: ', JSON.parse(retrievedObject));
+
+// Storage.prototype.setObject = function('ProductImage', ProductImage) {
+//     this.setItem('ProductImage', JSON.stringify(ProductImage));
+// }
+//
+// Storage.prototype.getObject = function(ProductImage) {
+//     var ProductImage = this.getItem(ProductImage);
+//     return ProductImage && JSON.parse(ProductImage);
+// }
 
 // ++++++++++++++++++++++++++++++++++++++++++++
 // DATA - Variable declarations
