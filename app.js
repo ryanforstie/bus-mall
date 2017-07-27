@@ -21,16 +21,6 @@ ProductImage.allNames = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bub
 //VARIABLE TO PREVENT DUPLICATES
 var previouslyShown = [];
 
-//IF STATEMENT LOADS DATA IF IT EXIST AND IF NOT STARTS FROM SCRATCH AND CREATES INSTANCES
-if(localStorage.length) {
-  console.log('There is local storage!');
-  ProductImage.all = JSON.parse(localStorage.ProductImage);
-} else {
-  for(var i = 0; i < ProductImage.allNames.length; i++) {
-    new ProductImage(ProductImage.allNames[i]);
-  }
-  console.log('There is no local storage!');
-};
 
 //DOM ELEMENTS FOR 3 IMAGES AND IMAGE SECTION
 ProductImage.leftImage = document.getElementById('left');
@@ -100,19 +90,18 @@ function handleClick(e) {
       ProductImage.all[i].votes += 1;
     }
   }
-  if(ProductImage.totalClicks === 5) {
+  if(ProductImage.totalClicks === 3) {
     ProductImage.container.removeEventListener('click', handleClick);
 
     updateChartArrays();
     return drawChart();
     return displayList();
   }
-
+//AFTER EACH CLICK THIS STORES THAT DATA
   localStorage.ProductImage = JSON.stringify(ProductImage.all);
 
   displayProductImages();
 };
-displayProductImages();
 
 //EVENT HANDLER THAT DISPLAYS NEW IMAGES ON CLICK
 ProductImage.container.addEventListener('click', handleClick);
@@ -183,7 +172,6 @@ function updateChartArrays() {
   }
 }
 
-
 function drawChart() {
   var ctx = document.getElementById('barChart').getContext('2d');
   barChart = new Chart(ctx,{
@@ -224,6 +212,21 @@ function drawChart() {
   });
   chartDrawn = true;
 }
+
+//IF STATEMENT LOADS DATA IF IT EXIST AND IF NOT STARTS FROM SCRATCH AND CREATES INSTANCES
+if(localStorage.length) {
+  console.log('There is local storage!');
+  ProductImage.all = JSON.parse(localStorage.ProductImage);
+} else {
+  for(var i = 0; i < ProductImage.allNames.length; i++) {
+    new ProductImage(ProductImage.allNames[i]);
+  }
+  console.log('There is no local storage!');
+};
+
+displayProductImages();
+
+
 
 // function hideChart() {
 //   document.getElementById('barChart').hidden = true;
