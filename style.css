@@ -1,9 +1,51 @@
+* {
+  /*border: 3px dashed orange;*/
+}
+
 body {
   font-family: Helvetica, sans-serif;
-  background-color: gray
+  background-color: #222;
+  margin: 0px auto;
+  width: 1200px;
+}
+
+
+h1 {
+  color: #C0C0C0;
+  margin: 0px auto;
+  width: 740px;
+  padding: 30px;
+  margin-top: 50px;
+  border-bottom: 10px dotted #000;
+	box-shadow: inset 0 -3px 0 0 #000, 0 3px 0 0 #000;
+}
+
+h2 {
+  color: #D3D3D3;
+  margin: 0px auto;
+  width: 800px;
+  padding: 20px;
+  line-height: 30px;
+  letter-spacing: 3px;
 }
 
 img {
-  width: 200px;
-  height: 200px;
+  width: 350px;
+  height: 300px;
+  padding: 15px;
+  border-radius: 10px
+}
+
+section {
+  background-color: #001f3f;
+	background-image: radial-gradient(#fff 10%, transparent 10%),
+	radial-gradient(#fff 10%, transparent 10%);
+	background-size: 30px 30px;
+	background-position: 0 0, 15px 15px;
+}
+
+canvas {
+  margin: 0px auto;
+  width: 1200px;
+  padding: 30px;
 }
