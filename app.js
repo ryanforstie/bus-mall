@@ -21,7 +21,6 @@ ProductImage.allNames = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bub
 //VARIABLE TO PREVENT DUPLICATES
 var previouslyShown = [];
 
-
 //DOM ELEMENTS FOR 3 IMAGES AND IMAGE SECTION
 ProductImage.leftImage = document.getElementById('left');
 ProductImage.centerImage = document.getElementById('center');
@@ -33,20 +32,31 @@ function generateRandomNumber() {
 }
 //DISPLAY 3 RANDOM IMAGES THAT DO NOT DUPLICATE
 function displayProductImages() {
-  console.log(previouslyShown, 'previously shown');
+  console.log(previouslyShown,'previously shown');
   var randomNumber = [];
   randomNumber[0] = generateRandomNumber();
   randomNumber[1] = generateRandomNumber();
 
   while(randomNumber[0] === randomNumber[1]) {
-    console.log('Duplicate found');
     randomNumber[1] = generateRandomNumber();
   }
   randomNumber[2] = generateRandomNumber();
 
   while(randomNumber[2] === randomNumber[1] || randomNumber[2] === randomNumber[0]) {
-    console.log('Dupicate found');
     randomNumber[2] = generateRandomNumber();
+  }
+
+  for(var i = 0; i < randomNumber.length; i++) {
+    while(randomNumber[i] === previouslyShown[0] ||
+       randomNumber[i] === previouslyShown[1] ||
+       randomNumber[i] === previouslyShown[2] ||
+       randomNumber[0] === randomNumber[2] ||
+       randomNumber[0] === randomNumber[1] ||
+       randomNumber[2] === randomNumber[1] ||
+       randomNumber[2] === randomNumber[0]) {
+      console.log('Dupicate found re-rolling');
+      randomNumber[i] = generateRandomNumber();
+    }
   }
 
   ProductImage.leftImage.src = ProductImage.all[randomNumber[0]].source;
@@ -61,7 +71,6 @@ function displayProductImages() {
   ProductImage.all[randomNumber[1]].views += 1;
   ProductImage.all[randomNumber[2]].views += 1;
 
-  console.log('currently showing');
   previouslyShown = randomNumber;
 };
 
@@ -90,7 +99,7 @@ function handleClick(e) {
       ProductImage.all[i].votes += 1;
     }
   }
-  if(ProductImage.totalClicks === 3) {
+  if(ProductImage.totalClicks === 25) {
     ProductImage.container.removeEventListener('click', handleClick);
 
     updateChartArrays();
@@ -225,26 +234,3 @@ if(localStorage.length) {
 };
 
 displayProductImages();
-
-
-
-// function hideChart() {
-//   document.getElementById('barChart').hidden = true;
-// }
-
-// function displayProductImages() {
-//   do {
-//     randomNum1 = Math.floor(Math.random() * (imageArray.length + 1));
-//   } while (selectionNumbers.includes(randomNum1) || randomNum1 === randomNum2 || randomNum1 === randomNum3 || randomNum1 === 20);
-//   do {
-//     randomNum2 = Math.floor(Math.random() * (imageArray.length + 1));
-//   } while (selectionNumbers.includes(randomNum2) || randomNum2 === randomNum1 || randomNum2 === randomNum3 || randomNum2 === 20);
-//   do {
-//     randomNum3 = Math.floor(Math.random() * (imageArray.length + 1));
-//   } while (selectionNumbers.includes(randomNum3) || randomNum3 === randomNum1 || randomNum3 === randomNum2 || randomNum3 === 20);
-//   selectionNumbers[0] = randomNum1;
-//   selectionNumbers[1] = randomNum2;
-//   selectionNumbers[2] = randomNum3;
-//   //log array to confirm non-repeating numbers are generated each time function is run
-//   console.log( 'this is a sectionNumber', selectionNumbers);
-// };
